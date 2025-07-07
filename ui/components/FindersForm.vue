@@ -56,13 +56,6 @@ const form = useForm({
       </template>
     </form.Field>
 
-    <form.Field name="dateTime">
-      <template v-slot="{ field }">
-        <label class="form-label">Date & Time</label>
-        <input class="form-input" type="text" :value="field.state.value" readonly />
-      </template>
-    </form.Field>
-
     <div class="form-row">
       <form.Field name="deck">
         <template v-slot="{ field }">
@@ -119,6 +112,13 @@ const form = useForm({
       </template>
     </form.Field>
 
+    <form.Field name="dateTime">
+      <template v-slot="{ field }">
+        <label class="form-label">Date & Time</label>
+        <input class="form-input" type="text" :value="field.state.value" readonly />
+      </template>
+    </form.Field>
+
     <form.Subscribe>
       <template v-slot="{ canSubmit, isSubmitting }">
         <button class="form-submit" type="submit" :disabled="!canSubmit">
@@ -133,24 +133,22 @@ const form = useForm({
 .duck-form {
   margin: 0 auto;
   padding: 2rem 1rem;
-  background: #fff;
   border-radius: 1.2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  text-align: left;
 }
 .form-title {
   text-align: center;
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: #1a237e;
   font-weight: 700;
 }
 .form-label {
   font-size: 1rem;
   font-weight: 500;
+  margin-top: 1rem;
   margin-bottom: 0.2rem;
-  color: #333;
   display: block;
 }
 .form-input {
@@ -160,7 +158,6 @@ const form = useForm({
   border-radius: 0.7rem;
   font-size: 1rem;
   margin-bottom: 0.2rem;
-  background: #f7f9fa;
   transition: border 0.2s;
 }
 .form-input:focus {
@@ -185,6 +182,7 @@ const form = useForm({
   border-radius: 0.8rem;
   cursor: pointer;
   transition: background 0.2s;
+  margin-top: 1rem;
 }
 .form-submit:disabled {
   background: #b0bec5;
