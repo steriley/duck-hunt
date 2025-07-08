@@ -7,10 +7,6 @@ export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api');
 
-app.get('/', (c) => {
-  return c.json({ message: 'from Hono!' });
-});
-
 async function saveToRedis(key: string, value: unknown) {
   try {
     const client = await createClient({ url: process.env.REDIS_URL }).connect();
@@ -27,6 +23,10 @@ async function saveToRedis(key: string, value: unknown) {
   }
 }
 
+app.get('/', (c) => {
+  return c.json({ message: 'from Hono!' });
+});
+
 app.post('/save', async (c) => {
   const { key, value } = await c.req.json();
   if (!key || !value) {
@@ -34,6 +34,24 @@ app.post('/save', async (c) => {
   }
   const savedValue = await saveToRedis(key, value);
   return c.json({ key, value: savedValue });
+});
+
+app.get('/finds', async (c) => {
+  try {
+    const client = await createClient({ url: process.env.REDIS_URL }).connect();
+    const keys = await client.keys('duck-hunt:*');
+    const finds = await Promise.all(
+      keys.map(async (key) => {
+        const value = await client.get(key);
+        return { key, value: JSON.parse(value || '{}') };
+      }),
+    );
+    await client.quit();
+    return c.json(finds);
+  } catch (error) {
+    console.error('Error fetching finds:', error);
+    return c.json({ error: 'Failed to fetch finds' }, 500);
+  }
 });
 
 app.post('/submit', async (c) => {
