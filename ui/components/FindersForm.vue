@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useForm } from '@tanstack/vue-form';
+import { ref } from 'vue';
 
 const now = new Date();
 const formattedDate = now.toLocaleString();
+const formSubmitted = ref(false);
+const submitResult = ref(null);
 
 const form = useForm({
   defaultValues: {
@@ -15,16 +18,33 @@ const form = useForm({
     photo: null as File | null,
   },
   onSubmit: async ({ value }) => {
-    // For demo: just alert the values (except photo)
-    const { photo, ...rest } = value;
-    alert('Submitted!\n' + JSON.stringify(rest, null, 2));
-    // You could handle file upload here
+    const formData = new FormData();
+    Object.entries(value).forEach(([key, val]) => {
+      if (key === 'photo' && val) {
+        formData.append('photo', val as File);
+      } else if (key !== 'photo') {
+        formData.append(key, val ?? '');
+      }
+    });
+
+    const response = await fetch('/api/submit', {
+      method: 'POST',
+      body: formData,
+    });
+
+    formSubmitted.value = true;
+    submitResult.value = await response.json();
   },
 });
 </script>
 
 <template>
-  <form @submit.prevent.stop="form.handleSubmit" class="duck-form" autocomplete="off">
+  <form
+    v-if="!formSubmitted"
+    @submit.prevent.stop="form.handleSubmit"
+    class="duck-form"
+    autocomplete="off"
+  >
     <h2 class="form-title">Duck Hunt Log</h2>
     <form.Field name="duckId">
       <template v-slot="{ field }">
@@ -127,6 +147,12 @@ const form = useForm({
       </template>
     </form.Subscribe>
   </form>
+  <div v-else class="duck-form">
+    <h2 class="form-title">Submission Result</h2>
+    <pre>
+      {{ JSON.stringify(submitResult, null, 2) }}
+    </pre>
+  </div>
 </template>
 
 <style scoped>
