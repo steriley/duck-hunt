@@ -4,6 +4,7 @@
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "types": ["node", "vite/client"]
   },

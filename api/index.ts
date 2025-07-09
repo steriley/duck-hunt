@@ -3,21 +3,12 @@ import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 import { createClient } from 'redis';
 
+import { type DuckSubmission } from '../common/types.js';
+
 export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api');
 const REDIS_KEY = 'duck-hunt:';
-
-type DuckSubmission = {
-  duckId: string;
-  finderName: string;
-  dateTime: string;
-  deck: string;
-  section: string;
-  story: string;
-  url: string | null;
-  downloadUrl: string | null;
-};
 
 async function saveToRedis(value: DuckSubmission): Promise<DuckSubmission | false> {
   try {
