@@ -17,7 +17,8 @@
     "@vercel/blob": "^1.1.1",
     "hono": "^4.8.4",
     "redis": "^5.6.0",
-    "vue": "^3.5.17"
+    "vue": "^3.5.17",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",

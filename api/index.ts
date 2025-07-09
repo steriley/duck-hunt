@@ -6,44 +6,41 @@ import { createClient } from 'redis';
 export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api');
+const REDIS_KEY = 'duck-hunt:';
 
-async function saveToRedis(key: string, value: unknown) {
+type DuckSubmission = {
+  duckId: string;
+  finderName: string;
+  dateTime: string;
+  deck: string;
+  section: string;
+  story: string;
+  url: string | null;
+  downloadUrl: string | null;
+};
+
+async function saveToRedis(value: DuckSubmission): Promise<DuckSubmission | false> {
   try {
     const client = await createClient({ url: process.env.REDIS_URL }).connect();
+    const key = REDIS_KEY + Date.now();
 
     await client.set(key, JSON.stringify(value));
-    const storedValue = await client.get(key);
-
     await client.quit();
-
-    return storedValue;
+    return value;
   } catch (error) {
     console.error('Error saving to Redis:', error);
-    return null;
+    return false;
   }
 }
-
-app.get('/', (c) => {
-  return c.json({ message: 'from Hono!' });
-});
-
-app.post('/save', async (c) => {
-  const { key, value } = await c.req.json();
-  if (!key || !value) {
-    return c.json({ error: 'Key and value are required' }, 400);
-  }
-  const savedValue = await saveToRedis(key, value);
-  return c.json({ key, value: savedValue });
-});
 
 app.get('/finds', async (c) => {
   try {
     const client = await createClient({ url: process.env.REDIS_URL }).connect();
-    const keys = await client.keys('duck-hunt:*');
+    const keys = await client.keys(REDIS_KEY + '*');
     const finds = await Promise.all(
-      keys.map(async (key) => {
+      keys.map(async (key: string) => {
         const value = await client.get(key);
-        return { key, value: JSON.parse(value || '{}') };
+        return { key, value: JSON.parse(value || '{}') as DuckSubmission };
       }),
     );
     await client.quit();
@@ -69,26 +66,27 @@ app.post('/submit', async (c) => {
     let url = null;
     let downloadUrl = null;
     if (photo && typeof photo === 'object' && 'arrayBuffer' in photo) {
-      blob = await put(photo.name, photo, { access: 'public' });
+      blob = await put(photo.name, photo, { access: 'public', addRandomSuffix: true });
       if (blob) {
         url = blob.url;
         downloadUrl = blob.downloadUrl;
       }
     }
 
-    // Here you can process the data as needed, e.g., save to a database
-    return c.json({
-      data: {
-        duckId,
-        finderName,
-        dateTime,
-        deck,
-        section,
-        story,
-      },
+    const data = {
+      duckId,
+      finderName,
+      dateTime,
+      deck,
+      section,
+      story,
       url,
       downloadUrl,
-    });
+    } as DuckSubmission;
+
+    await saveToRedis(data);
+
+    return c.json(data);
   } catch (error) {
     console.error('Error processing form data:', error);
     return c.json({ error: 'Failed to process form data' }, 500);

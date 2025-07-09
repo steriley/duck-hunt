@@ -1,7 +1,13 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "NodeNext",
+    "types": ["node", "vite/client"]
+  },
+  "references": [{ "path": "./ui" }, { "path": "./api" }],
+  "include": [],
+  "exclude": ["node_modules"]
 }

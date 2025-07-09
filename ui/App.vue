@@ -1,7 +1,5 @@
-<script setup lang="ts">
-import FindersForm from './components/FindersForm.vue';
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <FindersForm />
+  <RouterView />
 </template>
