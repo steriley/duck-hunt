@@ -13,56 +13,55 @@ onMounted(async () => {
 
 <template>
   <div class="duck-report">
-    <h1>🦆 Duck Discovery Report 🦆</h1>
+    <template v-for="duck in finds" :key="duck.key">
+      <img
+        :src="duck.value.url"
+        :alt="duck.value.duckId"
+        class="duck-image"
+        v-if="duck.value.url"
+      />
+      <div class="details-grid">
+        <div class="detail-item">
+          <div class="detail-label">Duck</div>
+          <div id="duckId">{{ duck.value.duckId }}</div>
+        </div>
 
-    <div class="details-grid" v-for="duck in finds" :key="duck.key">
-      <img :src="duck.value.url || ''" alt="Found Duck" class="duck-image" />
-      <div class="detail-item">
-        <div class="detail-label">Duck ID</div>
-        <div id="duckId">{{ duck.value.duckId }}</div>
+        <div class="detail-item">
+          <div class="detail-label">Found By</div>
+          <div id="finderName">{{ duck.value.finderName }}</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-label">Date Found</div>
+          <div id="dateTime">{{ duck.value.dateTime }}</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-label">Location</div>
+          <div id="location">{{ duck.value.deck }}, {{ duck.value.section }}</div>
+        </div>
+
+        <div class="story-box">
+          <div class="detail-label">Discovery Story</div>
+          <div id="story">{{ duck.value.story }}</div>
+        </div>
+
+        <div class="watermark">QUACK</div>
       </div>
-
-      <div class="detail-item">
-        <div class="detail-label">Found By</div>
-        <div id="finderName">{{ duck.value.finderName }}</div>
-      </div>
-
-      <div class="detail-item">
-        <div class="detail-label">Date Found</div>
-        <div id="dateTime">{{ duck.value.dateTime }}</div>
-      </div>
-
-      <div class="detail-item">
-        <div class="detail-label">Location</div>
-        <div id="location">{{ duck.value.deck }}, {{ duck.value.section }}</div>
-      </div>
-
-      <div class="story-box">
-        <div class="detail-label">Discovery Story</div>
-        <div id="story">{{ duck.value.story }}</div>
-      </div>
-
-      <div class="watermark">QUACK</div>
-    </div>
+    </template>
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 :root {
   --duck-yellow: #ffd700;
   --water-blue: #1e90ff;
   --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-body {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
-  min-height: 100vh;
-  margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.details-grid {
+  position: relative;
+  margin-bottom: 3rem;
 }
 
 .duck-report {
@@ -131,6 +130,7 @@ h1 {
   border-radius: 10px;
   margin-top: 10px;
   border-left: 5px solid var(--duck-yellow);
+  text-align: left;
 }
 
 .footer {

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vue-tsc -b && vite build",
     "deploy": "vercel",
-    "dev": "pnpm start:ui & pnpm start:api",
+    "dev": "pnpm start:api & pnpm start:ui",
     "preview": "vite preview",
     "start:api": "vercel dev",
     "start:ui": "vite",
@@ -30,6 +30,7 @@
     "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.5",
     "prettier": "^3.6.2",
+    "sass-embedded": "^1.89.2",
     "tsx": "^4.20.3",
     "typescript": "~5.8.3",
     "vercel": "^44.2.13",

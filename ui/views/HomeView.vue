@@ -3,11 +3,25 @@ import DuckRollCall from '../components/DuckRollCall.vue';
 </script>
 
 <template>
-  <h1>Duck Hunt</h1>
-  <p>Welcome to the Duck Hunt game!</p>
+  <h1>🦆 The Duck Report</h1>
 
-  <p>Use the navigation to find ducks and submit your findings.</p>
-  <router-link to="/submit">Submit a Duck</router-link>
+  <router-link to="/submit" class="submit">Report Find</router-link>
 
   <DuckRollCall />
 </template>
+
+<style scoped>
+.submit {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  background-color: red;
+  padding: 1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}
+</style>

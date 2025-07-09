@@ -2,8 +2,8 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022"],
-    "outDir": "./dist",
+    "lib": ["ES2022", "DOM"],
+    "outDir": "../api/dist",
     "rootDir": "../",
     "allowJs": false,
     "sourceMap": true
