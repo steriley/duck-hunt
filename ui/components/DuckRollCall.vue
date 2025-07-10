@@ -6,13 +6,18 @@ import { type DuckSubmission } from '../../common/types.js';
 const finds = ref<{ key: string; value: DuckSubmission }[]>([]);
 
 onMounted(async () => {
-  const data = await fetch('/api/finds');
-  finds.value = await data.json();
+  try {
+    const data = await fetch('/api/finds');
+    finds.value = await data.json();
+  } catch (error) {
+    console.error('Error fetching duck finds:', error);
+    finds.value = [];
+  }
 });
 </script>
 
 <template>
-  <div class="duck-report">
+  <div class="duck-report" v-if="finds.length > 0">
     <template v-for="duck in finds" :key="duck.key">
       <img
         :src="duck.value.url"
