@@ -7,13 +7,25 @@ const formattedDate = now.toLocaleString();
 const formSubmitted = ref(false);
 const submitResult = ref(null);
 
+const duckName = ref('');
+const finderName = ref('');
+const shipSection = ref('Forward');
+const story = ref('');
+const deckNumber = ref('16');
+const dayOfWeek = ref(now.toLocaleDateString('en-US', { weekday: 'long' }));
+const hourOfDay = ref(now.getHours().toString().padStart(2, '0'));
+const quarterOfHour = ref(String(Math.floor(now.getMinutes() / 15) * 15));
+
 const form = useForm({
   defaultValues: {
     duckId: '',
     finderName: '',
     dateTime: formattedDate,
-    deck: '',
-    section: '',
+    dayOfWeek: dayOfWeek.value,
+    hourOfDay: hourOfDay.value,
+    quarterOfHour: quarterOfHour.value,
+    deck: deckNumber.value,
+    section: shipSection.value,
     story: '',
     photo: null as File | null,
   },
@@ -45,78 +57,67 @@ const form = useForm({
     class="duck-form"
     autocomplete="off"
   >
-    <h2 class="form-title">Duck Hunt Log</h2>
+    <h2 class="form-title">Log 🦆 Find</h2>
     <form.Field name="duckId">
       <template v-slot="{ field }">
-        <label class="form-label">Duck ID/Name</label>
-        <select
-          class="form-input"
-          :value="field.state.value"
-          @change="(e) => field.handleChange((e.target as HTMLSelectElement).value)"
-        >
-          <option value="" disabled>Select a duck</option>
-          <option value="Donald">Donald</option>
-          <option value="Bert">Bert</option>
-          <option value="Trotter">Trotter</option>
-          <option value="Benny">Benny</option>
-        </select>
+        <label class="form-label">Duck Name</label>
+        <PrimeSelect
+          v-model="duckName"
+          :options="['Donald', 'Bert', 'Trotter', 'Benny']"
+          placeholder="Select a duck"
+          @change="field.handleChange(duckName)"
+        />
       </template>
     </form.Field>
 
     <form.Field name="finderName">
       <template v-slot="{ field }">
         <label class="form-label">Finder Name(s)</label>
-        <input
-          class="form-input"
+        <PrimeInput
           type="text"
-          :value="field.state.value"
-          @input="(e) => field.handleChange((e.target as HTMLInputElement).value)"
+          v-model="finderName"
+          maxlength="50"
           placeholder="Your name, nickname, or team"
+          @input="field.handleChange(finderName)"
         />
       </template>
     </form.Field>
 
-    <div class="form-row">
-      <form.Field name="deck">
-        <template v-slot="{ field }">
-          <label class="form-label">Deck #</label>
-          <input
-            class="form-input"
-            type="number"
-            min="1"
-            max="20"
-            :value="field.state.value"
-            @input="(e) => field.handleChange((e.target as HTMLInputElement).value)"
-            placeholder="Deck number"
-          />
-        </template>
-      </form.Field>
-      <form.Field name="section">
-        <template v-slot="{ field }">
-          <label class="form-label">Ship Section</label>
-          <select
-            class="form-input"
-            :value="field.state.value"
-            @change="(e) => field.handleChange((e.target as HTMLSelectElement).value)"
-          >
-            <option value="" disabled>Select</option>
-            <option value="Bow">Bow</option>
-            <option value="Stern">Stern</option>
-          </select>
-        </template>
-      </form.Field>
-    </div>
-
-    <form.Field name="story">
+    <form.Field name="deck">
       <template v-slot="{ field }">
-        <label class="form-label">Tell us your story</label>
-        <textarea
-          class="form-input"
-          rows="4"
-          :value="field.state.value"
-          @input="(e) => field.handleChange((e.target as HTMLTextAreaElement).value)"
-          placeholder="What led you there? Fun moments, scenic views, milestones..."
-        ></textarea>
+        <label class="form-label">Deck No.</label>
+        <PrimeSelect
+          v-model="deckNumber"
+          :options="[
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+            '11',
+            '12',
+            '14',
+            '15',
+            '16',
+            '17',
+            '18',
+            '19',
+          ]"
+          @change="field.handleChange(deckNumber)"
+        />
+      </template>
+    </form.Field>
+    <form.Field name="section">
+      <template v-slot="{ field }">
+        <label class="form-label">Ship Section</label>
+        <PrimeSelect
+          v-model="shipSection"
+          :options="['Forward', 'Mid Forward', 'Midship', 'Mid Aft', 'Aft']"
+          @change="field.handleChange(shipSection)"
+        />
       </template>
     </form.Field>
 
@@ -132,17 +133,56 @@ const form = useForm({
       </template>
     </form.Field>
 
+    <form.Field name="story">
+      <template v-slot="{ field }">
+        <label class="form-label">Tell us your story</label>
+        <PrimeTextarea
+          v-model="story"
+          autoResize
+          rows="5"
+          @input="field.handleChange(story)"
+          placeholder="What led you there? Fun moments, scenic views, milestones..."
+        />
+      </template>
+    </form.Field>
+
     <form.Field name="dateTime">
       <template v-slot="{ field }">
-        <label class="form-label">Date & Time</label>
-        <input class="form-input" type="text" :value="field.state.value" readonly />
+        <label class="form-label">Date & Time of Find</label>
+        <div class="form-row">
+          <PrimeSelect
+            v-model="dayOfWeek"
+            :options="[
+              'Sunday',
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+            ]"
+            @change="field.handleChange(dayOfWeek)"
+          />
+
+          <PrimeSelect
+            v-model="hourOfDay"
+            :options="Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'))"
+            @change="field.handleChange(hourOfDay)"
+          />
+
+          <PrimeSelect
+            v-model="quarterOfHour"
+            :options="['00', '15', '30', '45']"
+            @change="field.handleChange(quarterOfHour)"
+          />
+        </div>
       </template>
     </form.Field>
 
     <form.Subscribe>
       <template v-slot="{ canSubmit, isSubmitting }">
         <button class="form-submit" type="submit" :disabled="!canSubmit">
-          {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+          {{ isSubmitting ? 'Submitting...' : 'Log Find' }}
         </button>
       </template>
     </form.Subscribe>

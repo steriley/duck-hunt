@@ -1,10 +1,13 @@
 export type DuckSubmission = {
+  dateTime: string;
+  dayOfWeek: string;
+  deck: string;
+  downloadUrl: string | null;
   duckId: string;
   finderName: string;
-  dateTime: string;
-  deck: string;
+  hourOfDay: string;
+  quarterOfHour: string;
   section: string;
   story: string;
   url: string | null;
-  downloadUrl: string | null;
 };

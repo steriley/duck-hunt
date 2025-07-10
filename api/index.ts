@@ -45,11 +45,15 @@ app.get('/finds', async (c) => {
 app.post('/submit', async (c) => {
   try {
     const formData = await c.req.formData();
-    const photo = formData.get('photo');
+
+    const dateTime = formData.get('dateTime');
+    const dayOfWeek = formData.get('dayOfWeek');
+    const deck = formData.get('deck');
     const duckId = formData.get('duckId');
     const finderName = formData.get('finderName');
-    const dateTime = formData.get('dateTime');
-    const deck = formData.get('deck');
+    const hourOfDay = formData.get('hourOfDay');
+    const photo = formData.get('photo');
+    const quarterOfHour = formData.get('quarterOfHour');
     const section = formData.get('section');
     const story = formData.get('story');
 
@@ -65,14 +69,17 @@ app.post('/submit', async (c) => {
     }
 
     const data = {
+      dateTime,
+      dayOfWeek,
+      deck,
+      downloadUrl,
       duckId,
       finderName,
-      dateTime,
-      deck,
+      hourOfDay,
+      quarterOfHour,
       section,
       story,
       url,
-      downloadUrl,
     } as DuckSubmission;
 
     await saveToRedis(data);
