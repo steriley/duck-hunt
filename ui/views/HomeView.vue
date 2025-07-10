@@ -3,7 +3,7 @@ import DuckRollCall from '../components/DuckRollCall.vue';
 </script>
 
 <template>
-  <h1>🦆 The Duck Report</h1>
+  <h1>🦆 Report</h1>
 
   <router-link to="/submit" class="submit">Report Find</router-link>
 
@@ -21,7 +21,8 @@ import DuckRollCall from '../components/DuckRollCall.vue';
   border-radius: 5px;
   font-weight: bold;
   position: fixed;
-  top: 1rem;
+  bottom: 1rem;
   right: 1rem;
+  z-index: 10;
 }
 </style>

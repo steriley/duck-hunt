@@ -198,11 +198,11 @@ const form = useForm({
 <style scoped>
 .duck-form {
   margin: 0 auto;
-  padding: 2rem 1rem;
   border-radius: 1.2rem;
   display: flex;
   flex-direction: column;
   text-align: left;
+  min-width: 320px;
 }
 .form-title {
   text-align: center;
@@ -253,23 +253,5 @@ const form = useForm({
 .form-submit:disabled {
   background: #b0bec5;
   cursor: not-allowed;
-}
-@media (max-width: 600px) {
-  .duck-form {
-    padding: 1rem 0.3rem;
-    border-radius: 0.7rem;
-  }
-  .form-title {
-    font-size: 1.2rem;
-  }
-  .form-input,
-  .form-submit {
-    font-size: 1rem;
-    padding: 0.7rem 0.7rem;
-  }
-  .form-row {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
 }
 </style>
