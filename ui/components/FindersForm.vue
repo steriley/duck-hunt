@@ -59,7 +59,38 @@ const form = useForm({
         <label class="form-label">Duck Name</label>
         <PrimeSelect
           v-model="duckName"
-          :options="['Donald', 'Bert', 'Trotter', 'Benny']"
+          :options="[
+            'Beak-a-boo',
+            'Bubbles',
+            'Cupcake',
+            'Daffy',
+            'Duck Norris',
+            'Duck Vader',
+            'Duckleberry Finn',
+            'Duckyboo',
+            'Fluffy',
+            'Jellybean',
+            'Meryl Cheep',
+            'Mother Quackery',
+            'Muffin',
+            'Niblet',
+            'Noodle',
+            'Peep',
+            'Pickle',
+            'Pippin',
+            'Puddle',
+            'Quack Nicholson',
+            'Quack Sparrow',
+            'Quackers',
+            'Quackie Chan',
+            'Sir Quacksalot',
+            'Snuggles',
+            'Squeaky',
+            'Sunny',
+            'Tater Tot',
+            'Waddles',
+            'Wiggles',
+          ]"
           placeholder="Select a duck"
           @change="field.handleChange(duckName)"
         />
