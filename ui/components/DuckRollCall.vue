@@ -58,6 +58,9 @@ onMounted(async () => {
       <div class="watermark">QUACK</div>
     </div>
   </div>
+  <div class="duck-report" v-else>
+    <p>No ducks found yet! Be the first to report a duck 🦆</p>
+  </div>
 </template>
 
 <style lang="scss" scoped>

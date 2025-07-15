@@ -17,6 +17,54 @@ const dayOfWeek = ref(now.toLocaleDateString('en-US', { weekday: 'long' }));
 const hourOfDay = ref(now.getHours().toString().padStart(2, '0'));
 const quarterOfHour = ref(String(Math.floor(now.getMinutes() / 15) * 15).padStart(2, '0'));
 
+function resizeImage(file: File): Promise<File> {
+  return new Promise((resolve, reject) => {
+    if (!file) return resolve(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX_WIDTH = 600;
+        const MAX_HEIGHT = 600;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return reject(new Error('Image resize failed'));
+            const resizedFile = new File([blob], file.name, {
+              type: file.type || 'image/jpeg',
+              lastModified: Date.now(),
+            });
+            resolve(resizedFile);
+          },
+          file.type || 'image/jpeg',
+          0.8,
+        );
+      };
+      img.onerror = reject;
+      img.src = (e.target as FileReader).result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 const form = useForm({
   defaultValues: {
     duckId: '',
@@ -32,13 +80,15 @@ const form = useForm({
   },
   onSubmit: async ({ value }) => {
     const formData = new FormData();
-    Object.entries(value).forEach(([key, val]) => {
+
+    for (const [key, val] of Object.entries(value)) {
       if (key === 'photo' && val) {
-        formData.append('photo', val as File);
+        const resized = await resizeImage(val as File);
+        formData.append('photo', resized);
       } else if (key !== 'photo') {
         formData.append(key, val ?? '');
       }
-    });
+    }
 
     const response = await fetch('/api/submit', {
       method: 'POST',
