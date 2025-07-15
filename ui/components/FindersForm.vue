@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useForm } from '@tanstack/vue-form';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const now = new Date();
 const formattedDate = now.toLocaleString();
-const formSubmitted = ref(false);
 const submitResult = ref(null);
 
 const duckName = ref('');
@@ -44,19 +45,14 @@ const form = useForm({
       body: formData,
     });
 
-    formSubmitted.value = true;
     submitResult.value = await response.json();
+    router.push('/');
   },
 });
 </script>
 
 <template>
-  <form
-    v-if="!formSubmitted"
-    @submit.prevent.stop="form.handleSubmit"
-    class="duck-form"
-    autocomplete="off"
-  >
+  <form @submit.prevent.stop="form.handleSubmit" class="duck-form" autocomplete="off">
     <h2 class="form-title">Log 🦆 Find</h2>
     <form.Field name="duckId">
       <template v-slot="{ field }">
@@ -187,12 +183,6 @@ const form = useForm({
       </template>
     </form.Subscribe>
   </form>
-  <div v-else class="duck-form">
-    <h2 class="form-title">Submission Result</h2>
-    <pre>
-      {{ JSON.stringify(submitResult, null, 2) }}
-    </pre>
-  </div>
 </template>
 
 <style scoped>

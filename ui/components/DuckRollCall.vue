@@ -17,43 +17,46 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="duck-report" v-if="finds.length > 0">
-    <template v-for="duck in finds" :key="duck.key">
-      <img
-        :src="duck.value.url"
-        :alt="duck.value.duckId"
-        class="duck-image"
-        v-if="duck.value.url"
-      />
-      <div class="details-grid">
-        <div class="detail-item">
-          <div class="detail-label">Duck</div>
-          <div id="duckId">{{ duck.value.duckId }}</div>
-        </div>
-
-        <div class="detail-item">
-          <div class="detail-label">Found By</div>
-          <div id="finderName">{{ duck.value.finderName }}</div>
-        </div>
-
-        <div class="detail-item">
-          <div class="detail-label">Date Found</div>
-          <div id="dateTime">{{ duck.value.dateTime }}</div>
-        </div>
-
-        <div class="detail-item">
-          <div class="detail-label">Location</div>
-          <div id="location">{{ duck.value.deck }}, {{ duck.value.section }}</div>
-        </div>
-
-        <div class="story-box">
-          <div class="detail-label">Discovery Story</div>
-          <div id="story">{{ duck.value.story }}</div>
-        </div>
-
-        <div class="watermark">QUACK</div>
+  <div class="duck-report" v-if="finds.length > 0" v-for="duck in finds" :key="duck.key">
+    <img
+      :src="duck.value.url"
+      :alt="duck.value.duckId"
+      class="duck-image"
+      v-if="duck.value.url"
+      loading="lazy"
+    />
+    <div class="details-grid">
+      <div class="detail-item">
+        <div class="detail-label">Duck</div>
+        <div id="duckId">{{ duck.value.duckId }}</div>
       </div>
-    </template>
+
+      <div class="detail-item">
+        <div class="detail-label">Found By</div>
+        <div id="finderName">{{ duck.value.finderName }}</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">Date Found</div>
+        <div id="dateTime">
+          {{ duck.value.dayOfWeek }} @ {{ duck.value.hourOfDay }}:{{
+            duck.value.quarterOfHour.padEnd(2, '0')
+          }}
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">Location</div>
+        <div id="location">{{ duck.value.deck }}, {{ duck.value.section }}</div>
+      </div>
+
+      <div class="story-box">
+        <div class="detail-label">Discovery Story</div>
+        <div id="story">{{ duck.value.story }}</div>
+      </div>
+
+      <div class="watermark">QUACK</div>
+    </div>
   </div>
 </template>
 
@@ -66,17 +69,17 @@ onMounted(async () => {
 
 .details-grid {
   position: relative;
-  margin-bottom: 3rem;
 }
 
 .duck-report {
   background: white;
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
-  padding: 30px;
+  padding: 1rem;
   max-width: 600px;
   position: relative;
   overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
 .duck-report::before {
@@ -104,7 +107,7 @@ h1 {
   height: 300px;
   object-fit: contain;
   border-radius: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   border: 5px solid var(--duck-yellow);
   box-shadow: var(--shadow);
 }
