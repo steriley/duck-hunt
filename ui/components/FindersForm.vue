@@ -214,12 +214,17 @@ const form = useForm({
 }
 .form-input {
   width: 100%;
+  color: #fff;
   padding: 0.7rem 1rem;
   border: 1px solid #cfd8dc;
   border-radius: 0.7rem;
   font-size: 1rem;
   margin-bottom: 0.2rem;
   transition: border 0.2s;
+
+  @media (prefers-color-scheme: light) {
+    background: #999;
+  }
 }
 .form-input:focus {
   border-color: #1976d2;

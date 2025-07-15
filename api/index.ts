@@ -2,6 +2,7 @@ import { put } from '@vercel/blob';
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 import { createClient } from 'redis';
+import sharp from 'sharp';
 
 import { type DuckSubmission } from '../common/types.js';
 
@@ -35,7 +36,16 @@ app.get('/finds', async (c) => {
       }),
     );
     await client.quit();
-    return c.json(finds);
+
+    const sortedFinds = finds.sort((a, b) => {
+      const splitKeyA = a.key.split(':');
+      const splitKeyB = b.key.split(':');
+      const dateA = new Date(parseInt(splitKeyA[splitKeyA.length - 1], 10)).getTime();
+      const dateB = new Date(parseInt(splitKeyB[splitKeyB.length - 1], 10)).getTime();
+      return dateB - dateA;
+    });
+
+    return c.json(sortedFinds);
   } catch (error) {
     console.error('Error fetching finds:', error);
     return c.json({ error: 'Failed to fetch finds' }, 500);
@@ -61,7 +71,10 @@ app.post('/submit', async (c) => {
     let url = null;
     let downloadUrl = null;
     if (photo && typeof photo === 'object' && 'arrayBuffer' in photo) {
-      blob = await put(photo.name, photo, { access: 'public', addRandomSuffix: true });
+      const resizedImage = await sharp(await photo.arrayBuffer())
+        .resize({ width: 600, fit: sharp.fit.contain })
+        .toBuffer();
+      blob = await put(photo.name, resizedImage, { access: 'public', addRandomSuffix: true });
       if (blob) {
         url = blob.url;
         downloadUrl = blob.downloadUrl;
