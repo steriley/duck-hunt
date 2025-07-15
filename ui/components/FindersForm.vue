@@ -53,7 +53,7 @@ const form = useForm({
 
 <template>
   <form @submit.prevent.stop="form.handleSubmit" class="duck-form" autocomplete="off">
-    <h2 class="form-title">Log 🦆 Find</h2>
+    <h1>Found a 🦆</h1>
     <form.Field name="duckId">
       <template v-slot="{ field }">
         <label class="form-label">Duck Name</label>
