@@ -15,7 +15,7 @@ const story = ref('');
 const deckNumber = ref('16');
 const dayOfWeek = ref(now.toLocaleDateString('en-US', { weekday: 'long' }));
 const hourOfDay = ref(now.getHours().toString().padStart(2, '0'));
-const quarterOfHour = ref(String(Math.floor(now.getMinutes() / 15) * 15));
+const quarterOfHour = ref(String(Math.floor(now.getMinutes() / 15) * 15).padStart(2, '0'));
 
 const form = useForm({
   defaultValues: {
@@ -201,11 +201,16 @@ const form = useForm({
   font-weight: 700;
 }
 .form-label {
+  color: #fff;
   font-size: 1rem;
   font-weight: 500;
   margin-top: 1rem;
   margin-bottom: 0.2rem;
   display: block;
+
+  @media (prefers-color-scheme: light) {
+    color: #000;
+  }
 }
 .form-input {
   width: 100%;

@@ -80,6 +80,10 @@ onMounted(async () => {
   position: relative;
   overflow: hidden;
   margin-bottom: 1.5rem;
+
+  @media (prefers-color-scheme: light) {
+    background: #999;
+  }
 }
 
 .duck-report::before {
